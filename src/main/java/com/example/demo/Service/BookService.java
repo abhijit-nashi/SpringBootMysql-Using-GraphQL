@@ -30,6 +30,14 @@ public Optional<Book> getBookById(Long id){
     return bookrepo.findById(id);
 }
 
+public void updateBook(Long id, Book updatedBook) {
+    bookrepo.findById(id).ifPresent(existingBook -> {
+        existingBook.setName(updatedBook.getName());
+        existingBook.setPrice(updatedBook.getPrice());
+        bookrepo.save(existingBook);
+    });
+}
+
 public Book saveBook(Book book){
     return bookrepo.save(book);
 }
