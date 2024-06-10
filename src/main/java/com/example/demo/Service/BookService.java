@@ -1,7 +1,6 @@
 package com.example.demo.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,24 +12,19 @@ import com.example.demo.Repo.BookRepo;
 
 @Service
 public class BookService {
-
+@Autowired
 private BookRepo bookrepo;
 
-@Autowired
-public void BookService(BookRepo bookrepo) 
-{
-    this.bookrepo = bookrepo;
-}
 
 public List<Book> getALLBooks(){
     return bookrepo.findAll();
 }
 
-public Optional<Book> getBookById(Long id){
-    return bookrepo.findById(id);
+public Book getBookById(int id){
+    return bookrepo.findById(id).orElseThrow(() -> new RuntimeException("No User Present"));
 }
 
-public void updateBook(Long id, Book updatedBook) {
+public void updateBook(int id, Book updatedBook) {
     bookrepo.findById(id).ifPresent(existingBook -> {
         existingBook.setName(updatedBook.getName());
         existingBook.setPrice(updatedBook.getPrice());
@@ -42,7 +36,7 @@ public Book saveBook(Book book){
     return bookrepo.save(book);
 }
 
-public void deleteBook(Long id){
+public void deleteBook(int id){
      bookrepo.deleteById(id);
 }
 }

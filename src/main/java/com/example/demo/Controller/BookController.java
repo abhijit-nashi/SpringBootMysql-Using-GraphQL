@@ -1,69 +1,78 @@
 package com.example.demo.Controller;
-
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.Model.Book;
 import com.example.demo.Service.BookService;
 
+import lombok.Data;
+
 import java.util.List;
 import org.springframework.http.HttpStatus;
-//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 
-
-@RestController
-@RequestMapping("/api")
+@Controller
 public class BookController {
-    
+ 
+@Autowired
 private BookService bookservice;
 
 //@Autowired
-public BookController(BookService bookservice)
-{
-    this.bookservice=bookservice;
-}
+// public BookController(BookService bookservice)
+// {
+//     this.bookservice=bookservice;
+// }
 
-
-@GetMapping
+@QueryMapping("allBooks")
 public List<Book> getALLBooks()
 {
     return bookservice.getALLBooks();
 }
 
-@GetMapping("/{id}")
-public ResponseEntity<Book> getBookById(@PathVariable Long id)
+@QueryMapping("getBook")
+public Book getBookById(@Argument int bookId)
 {
-    return bookservice.getBookById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    return bookservice.getBookById(bookId);
 
 }
 
+@MutationMapping("createBook")
+public Book saveBook(@Argument BookInput book)
+{
+    Book b = new Book();
+    b.setName(book.getName());
+    b.setAuthor(book.getAuthor());
+    b.setPrice(book.getPrice());
+    return bookservice.saveBook(b);
+}
+
 @PutMapping("/{id}")
-public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+public ResponseEntity<Book> updateBook(@PathVariable int id, @RequestBody Book updatedBook) {
      bookservice.updateBook(id, updatedBook);
      return ResponseEntity.noContent().build();
 }
 
-
-@PostMapping
-public ResponseEntity<Book> saveBook(@RequestBody Book book)
+@MutationMapping("deleteBook")
+public ResponseEntity<Void> deleteBook(@Argument int bookId)
 {
-    Book addedbook = bookservice.saveBook(book);
-    return ResponseEntity.status(HttpStatus.CREATED).body(addedbook);
-}
-
-@DeleteMapping("/{id}")
-public ResponseEntity<Void> deleteBook(@PathVariable Long id)
-{
-    bookservice.deleteBook(id);
+    bookservice.deleteBook(bookId);
     return ResponseEntity.ok().build();
 
 }
+}
+@Data
+class BookInput{
+    private String name;
+    private int price;
+    private String author;
+
 }
