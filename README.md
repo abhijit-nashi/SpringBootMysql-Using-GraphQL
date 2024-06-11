@@ -2,4 +2,4 @@ Spring boot application connected with MySQL database, performing CRUD operation
 
 Update----> Added GraphQl Schema for post and get details of Book
 
-![image](https://github.com/abhijit-nashi/SpringBootMysql/assets/155634784/fc5c0f93-0d87-47e3-8259-080c00f4cd95)
+![image](https://th.bing.com/th?id=OIP.8MHYg5aVYyWGfyWKlFrGwgHaCW&w=350&h=111&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2)
