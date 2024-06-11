@@ -1,6 +1,5 @@
 type Mutation {
     createBook(book: BookInput): Book
-    deleteBook(bookId: Int): Book
 }
 
 type Query {
@@ -21,7 +20,3 @@ input BookInput {
     author: String
 }
 
-input ResponseMessage{
-    message: String
-    value: Boolean
-}
