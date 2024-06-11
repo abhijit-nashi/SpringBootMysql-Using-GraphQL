@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 import com.example.demo.Model.Book;
+import com.example.demo.Repo.BookRepo;
 import com.example.demo.Service.BookService;
 
 import lombok.Data;
@@ -25,6 +26,9 @@ public class BookController {
  
 @Autowired
 private BookService bookservice;
+
+@Autowired
+private BookRepo bookRepo;
 
 //@Autowired
 // public BookController(BookService bookservice)
@@ -55,17 +59,24 @@ public Book saveBook(@Argument BookInput book)
     return bookservice.saveBook(b);
 }
 
-@PutMapping("/{id}")
-public ResponseEntity<Book> updateBook(@PathVariable int id, @RequestBody Book updatedBook) {
-     bookservice.updateBook(id, updatedBook);
-     return ResponseEntity.noContent().build();
+@MutationMapping("updateBook")
+public Book updateBook(@Argument int bookId, @Argument BookInput book) {
+    //  bookservice.updateBook(id, updatedBook);
+    //  return ResponseEntity.noContent().build();
+     Book tobeupdatedBook = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+     tobeupdatedBook.setName(book.getName());
+     tobeupdatedBook.setAuthor(book.getAuthor());
+     tobeupdatedBook.setPrice(book.getPrice());
+     bookRepo.save(tobeupdatedBook);
+     return tobeupdatedBook;
 }
 
 @MutationMapping("deleteBook")
-public ResponseEntity<Void> deleteBook(@Argument int bookId)
+public Book deleteBook(@Argument int bookId)
 {
-    bookservice.deleteBook(bookId);
-    return ResponseEntity.ok().build();
+    Book existingBook = bookRepo.findById(bookId).orElseThrow(()-> new RuntimeException("Book Not Found"));
+    bookRepo.delete(existingBook);
+    return existingBook;
 
 }
 }

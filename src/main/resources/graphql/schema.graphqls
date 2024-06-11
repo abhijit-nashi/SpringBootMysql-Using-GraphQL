@@ -1,5 +1,7 @@
 type Mutation {
     createBook(book: BookInput): Book
+    updateBook(bookId: Int, book: BookInput): Book
+    deleteBook(bookId: Int): Book
 }
 
 type Query {
